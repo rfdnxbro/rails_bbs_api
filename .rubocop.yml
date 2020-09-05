@@ -1,0 +1,7 @@
+# 日本語コメント許可
+AsciiComments:
+  Enabled: false
+  
+# ダブルクォーテーションに統一
+StringLiterals:
+  EnforcedStyle: double_quotes
