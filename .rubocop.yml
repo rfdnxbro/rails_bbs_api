@@ -15,3 +15,8 @@ StringLiterals:
 Style/Documentation:
   Exclude:
     - "db/migrate/**/*"
+
+# ブロック長さ
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
