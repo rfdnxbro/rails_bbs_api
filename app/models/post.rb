@@ -4,5 +4,5 @@
 # 投稿クラス
 #
 class Post < ApplicationRecord
-  validates :subject, presence: true
+  validates :subject, presence: true, length: { maximum: 30 }
 end
