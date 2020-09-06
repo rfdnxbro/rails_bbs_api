@@ -17,11 +17,20 @@ module V1
     end
 
     def create
-      # TODO
+      post = Post.new(post_params)
+      if post.save
+        render json: { status: "success", data: post }
+      else
+        render json: { status: "error", data: post.errors }
+      end
     end
 
     def update
-      # TODO
+      if @post.update(post_params)
+        render json: { status: "success", data: @post }
+      else
+        render json: { status: "error", data: @post.errors }
+      end
     end
 
     def destroy
@@ -35,7 +44,7 @@ module V1
     end
 
     def post_params
-      params.require(:post).permit(:subject, :body)
+      params.permit(:subject, :body)
     end
   end
 end

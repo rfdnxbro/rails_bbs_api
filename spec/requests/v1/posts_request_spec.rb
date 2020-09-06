@@ -43,4 +43,58 @@ RSpec.describe "V1::Posts", type: :request do
       expect(response.status).to eq 404
     end
   end
+
+  describe "POST #create" do
+    let(:new_post) do
+      attributes_for(:post, subject: "create_subjectテスト", body: "create_bodyテスト")
+    end
+    it "正常レスポンスコードが返ってくる" do
+      post v1_posts_url, params: new_post
+      expect(response.status).to eq 200
+    end
+    it "1件増えて返ってくる" do
+      expect do
+        post v1_posts_url, params: new_post
+      end.to change { Post.count }.by(1)
+    end
+    it "subject, bodyが正しく返ってくる" do
+      post v1_posts_url, params: new_post
+      json = JSON.parse(response.body)
+      expect(json["data"]["subject"]).to eq("create_subjectテスト")
+      expect(json["data"]["body"]).to eq("create_bodyテスト")
+    end
+    it "不正パラメータの時にstatusがerrorで返ってくる" do
+      post v1_posts_url, params: {}
+      json = JSON.parse(response.body)
+      expect(json["status"]).to eq("error")
+    end
+  end
+
+  describe "POST #update" do
+    let(:update_param) do
+      post = create(:post)
+      update_param = attributes_for(:post, subject: "update_subjectテスト", body: "update_bodyテスト")
+      update_param[:id] = post.id
+      update_param
+    end
+    it "正常レスポンスコードが返ってくる" do
+      put v1_post_url({ id: update_param[:id] }), params: update_param
+      expect(response.status).to eq 200
+    end
+    it "subject, bodyが正しく返ってくる" do
+      put v1_post_url({ id: update_param[:id] }), params: update_param
+      json = JSON.parse(response.body)
+      expect(json["data"]["subject"]).to eq("update_subjectテスト")
+      expect(json["data"]["body"]).to eq("update_bodyテスト")
+    end
+    it "不正パラメータの時にstatusがerrorで返ってくる" do
+      put v1_post_url({ id: update_param[:id] }), params: { subject: "" }
+      json = JSON.parse(response.body)
+      expect(json["status"]).to eq("error")
+    end
+    it "存在しないidの時に404レスポンスが返ってくる" do
+      put v1_post_url({ id: update_param[:id] + 1 }), params: update_param
+      expect(response.status).to eq 404
+    end
+  end
 end
