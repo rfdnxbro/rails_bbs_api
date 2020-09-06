@@ -13,7 +13,7 @@ module V1
     end
 
     def show
-      # TODO
+      render json: { status: "success", data: @post }
     end
 
     def create
