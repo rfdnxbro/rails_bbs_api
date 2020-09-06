@@ -31,4 +31,33 @@ RSpec.describe Post, type: :model do
       end
     end
   end
+
+  describe "body" do
+    context "blankの時に" do
+      let(:post) do
+        build(:post, body: "")
+      end
+      it "invalidになる" do
+        expect(post).not_to be_valid
+      end
+    end
+    context "maxlengthにより" do
+      context "100文字の場合に" do
+        let(:post) do
+          build(:post, body: "あ" * 100)
+        end
+        it "validになる" do
+          expect(post).to be_valid
+        end
+      end
+      context "101文字の場合に" do
+        let(:post) do
+          build(:post, body: "あ" * 101)
+        end
+        it "invalidになる" do
+          expect(post).not_to be_valid
+        end
+      end
+    end
+  end
 end
