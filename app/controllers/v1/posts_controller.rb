@@ -34,7 +34,8 @@ module V1
     end
 
     def destroy
-      # TODO
+      @post.destroy
+      render json: { status: "success", data: @post }
     end
 
     private

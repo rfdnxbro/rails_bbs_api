@@ -70,7 +70,7 @@ RSpec.describe "V1::Posts", type: :request do
     end
   end
 
-  describe "POST #update" do
+  describe "PUT #update" do
     let(:update_param) do
       post = create(:post)
       update_param = attributes_for(:post, subject: "update_subjectテスト", body: "update_bodyテスト")
@@ -94,6 +94,26 @@ RSpec.describe "V1::Posts", type: :request do
     end
     it "存在しないidの時に404レスポンスが返ってくる" do
       put v1_post_url({ id: update_param[:id] + 1 }), params: update_param
+      expect(response.status).to eq 404
+    end
+  end
+
+  describe "DELETE #destroy" do
+    let(:delete_post) do
+      create(:post)
+    end
+    it "正常レスポンスコードが返ってくる" do
+      delete v1_post_url({ id: delete_post.id })
+      expect(response.status).to eq 200
+    end
+    it "1件減って返ってくる" do
+      delete_post
+      expect do
+        delete v1_post_url({ id: delete_post.id })
+      end.to change { Post.count }.by(-1)
+    end
+    it "存在しないidの時に404レスポンスが返ってくる" do
+      delete v1_post_url({ id: delete_post.id + 1 })
       expect(response.status).to eq 404
     end
   end
