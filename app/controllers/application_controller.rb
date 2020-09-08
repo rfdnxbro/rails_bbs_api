@@ -4,6 +4,7 @@
 # controllerのsuperクラス
 #
 class ApplicationController < ActionController::API
+  include DeviseTokenAuth::Concerns::SetUserByToken
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   def render_404

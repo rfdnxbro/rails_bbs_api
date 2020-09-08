@@ -49,3 +49,7 @@ gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 # serializer
 gem "active_model_serializers"
+
+# 認証
+gem "devise"
+gem "devise_token_auth"
