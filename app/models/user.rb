@@ -9,4 +9,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
+
+  validates :name, presence: true, length: { maximum: 30 }
+  validates :email, presence: true, length: { maximum: 100 }
 end
