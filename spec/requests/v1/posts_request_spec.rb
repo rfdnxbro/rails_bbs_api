@@ -3,6 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "V1::Posts", type: :request do
+  let(:authorized_headers) do
+    authorized_user_headers
+  end
   describe "GET /v1/posts#index" do
     before do
       create_list(:post, 3)
@@ -49,22 +52,22 @@ RSpec.describe "V1::Posts", type: :request do
       attributes_for(:post, subject: "create_subjectテスト", body: "create_bodyテスト")
     end
     it "正常レスポンスコードが返ってくる" do
-      post v1_posts_url, params: new_post
+      post v1_posts_url, params: new_post, headers: authorized_headers
       expect(response.status).to eq 200
     end
     it "1件増えて返ってくる" do
       expect do
-        post v1_posts_url, params: new_post
+        post v1_posts_url, params: new_post, headers: authorized_headers
       end.to change { Post.count }.by(1)
     end
     it "subject, bodyが正しく返ってくる" do
-      post v1_posts_url, params: new_post
+      post v1_posts_url, params: new_post, headers: authorized_headers
       json = JSON.parse(response.body)
       expect(json["post"]["subject"]).to eq("create_subjectテスト")
       expect(json["post"]["body"]).to eq("create_bodyテスト")
     end
     it "不正パラメータの時にerrorsが返ってくる" do
-      post v1_posts_url, params: {}
+      post v1_posts_url, params: {}, headers: authorized_headers
       json = JSON.parse(response.body)
       expect(json.key?("errors")).to be true
     end

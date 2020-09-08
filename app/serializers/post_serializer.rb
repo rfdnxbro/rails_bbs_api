@@ -5,4 +5,5 @@
 #
 class PostSerializer < ActiveModel::Serializer
   attributes :id, :subject, :body
+  belongs_to :user
 end

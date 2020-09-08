@@ -8,7 +8,7 @@ module V1
     before_action :set_post, only: %i[show update destroy]
 
     def index
-      posts = Post.order(created_at: :desc).limit(20)
+      posts = Post.includes(:user).order(created_at: :desc).limit(20)
       render json: posts
     end
 
@@ -17,7 +17,7 @@ module V1
     end
 
     def create
-      post = Post.new(post_params)
+      post = current_v1_user.posts.new(post_params)
       if post.save
         render json: post
       else
