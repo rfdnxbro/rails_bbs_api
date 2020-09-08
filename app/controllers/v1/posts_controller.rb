@@ -9,33 +9,33 @@ module V1
 
     def index
       posts = Post.order(created_at: :desc).limit(20)
-      render json: { status: "success", data: posts }
+      render json: posts
     end
 
     def show
-      render json: { status: "success", data: @post }
+      render json: @post
     end
 
     def create
       post = Post.new(post_params)
       if post.save
-        render json: { status: "success", data: post }
+        render json: post
       else
-        render json: { status: "error", data: post.errors }
+        render json: { error: post.errors }
       end
     end
 
     def update
       if @post.update(post_params)
-        render json: { status: "success", data: @post }
+        render json: @post
       else
-        render json: { status: "error", data: @post.errors }
+        render json: { error: @post.errors }
       end
     end
 
     def destroy
       @post.destroy
-      render json: { status: "success", data: @post }
+      render json: @post
     end
 
     private

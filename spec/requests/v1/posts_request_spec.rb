@@ -14,14 +14,14 @@ RSpec.describe "V1::Posts", type: :request do
     it "件数が正しく返ってくる" do
       get v1_posts_url
       json = JSON.parse(response.body)
-      expect(json["data"].length).to eq(3)
+      expect(json["posts"].length).to eq(3)
     end
     it "id降順にレスポンスが返ってくる" do
       get v1_posts_url
       json = JSON.parse(response.body)
-      first_id = json["data"][0]["id"]
-      expect(json["data"][1]["id"]).to eq(first_id - 1)
-      expect(json["data"][2]["id"]).to eq(first_id - 2)
+      first_id = json["posts"][0]["id"]
+      expect(json["posts"][1]["id"]).to eq(first_id - 1)
+      expect(json["posts"][2]["id"]).to eq(first_id - 2)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe "V1::Posts", type: :request do
     it "subjectが正しく返ってくる" do
       get v1_post_url({ id: post.id })
       json = JSON.parse(response.body)
-      expect(json["data"]["subject"]).to eq("showテスト")
+      expect(json["post"]["subject"]).to eq("showテスト")
     end
     it "存在しないidの時に404レスポンスが返ってくる" do
       get v1_post_url({ id: post.id + 1 })
@@ -60,13 +60,13 @@ RSpec.describe "V1::Posts", type: :request do
     it "subject, bodyが正しく返ってくる" do
       post v1_posts_url, params: new_post
       json = JSON.parse(response.body)
-      expect(json["data"]["subject"]).to eq("create_subjectテスト")
-      expect(json["data"]["body"]).to eq("create_bodyテスト")
+      expect(json["post"]["subject"]).to eq("create_subjectテスト")
+      expect(json["post"]["body"]).to eq("create_bodyテスト")
     end
     it "不正パラメータの時にstatusがerrorで返ってくる" do
       post v1_posts_url, params: {}
       json = JSON.parse(response.body)
-      expect(json["status"]).to eq("error")
+      expect(json.key?("error")).to be true
     end
   end
 
@@ -84,13 +84,13 @@ RSpec.describe "V1::Posts", type: :request do
     it "subject, bodyが正しく返ってくる" do
       put v1_post_url({ id: update_param[:id] }), params: update_param
       json = JSON.parse(response.body)
-      expect(json["data"]["subject"]).to eq("update_subjectテスト")
-      expect(json["data"]["body"]).to eq("update_bodyテスト")
+      expect(json["post"]["subject"]).to eq("update_subjectテスト")
+      expect(json["post"]["body"]).to eq("update_bodyテスト")
     end
-    it "不正パラメータの時にstatusがerrorで返ってくる" do
+    it "不正パラメータの時にerrorが返ってくる" do
       put v1_post_url({ id: update_param[:id] }), params: { subject: "" }
       json = JSON.parse(response.body)
-      expect(json["status"]).to eq("error")
+      expect(json.key?("error")).to be true
     end
     it "存在しないidの時に404レスポンスが返ってくる" do
       put v1_post_url({ id: update_param[:id] + 1 }), params: update_param
