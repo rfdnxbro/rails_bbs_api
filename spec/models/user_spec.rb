@@ -59,5 +59,23 @@ RSpec.describe User, type: :model do
         end
       end
     end
+    context "email形式により" do
+      context "正しい文字列の場合に" do
+        let(:user) do
+          build(:user, email: "test@example.com")
+        end
+        it "validになる" do
+          expect(user).to be_valid
+        end
+      end
+      context "正しくない文字列の場合に" do
+        let(:user) do
+          build(:user, email: "test@example")
+        end
+        it "invalidになる" do
+          expect(user).not_to be_valid
+        end
+      end
+    end
   end
 end

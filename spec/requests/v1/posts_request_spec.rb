@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "V1::Posts", type: :request do
-  describe "GET #index" do
+  describe "GET /v1/posts#index" do
     before do
       create_list(:post, 3)
     end
@@ -25,7 +25,7 @@ RSpec.describe "V1::Posts", type: :request do
     end
   end
 
-  describe "GET #show" do
+  describe "GET /v1/posts#show" do
     let(:post) do
       create(:post, subject: "showテスト")
     end
@@ -44,7 +44,7 @@ RSpec.describe "V1::Posts", type: :request do
     end
   end
 
-  describe "POST #create" do
+  describe "POST /v1/posts#create" do
     let(:new_post) do
       attributes_for(:post, subject: "create_subjectテスト", body: "create_bodyテスト")
     end
@@ -63,14 +63,14 @@ RSpec.describe "V1::Posts", type: :request do
       expect(json["post"]["subject"]).to eq("create_subjectテスト")
       expect(json["post"]["body"]).to eq("create_bodyテスト")
     end
-    it "不正パラメータの時にstatusがerrorで返ってくる" do
+    it "不正パラメータの時にerrorsが返ってくる" do
       post v1_posts_url, params: {}
       json = JSON.parse(response.body)
-      expect(json.key?("error")).to be true
+      expect(json.key?("errors")).to be true
     end
   end
 
-  describe "PUT #update" do
+  describe "PUT /v1/posts#update" do
     let(:update_param) do
       post = create(:post)
       update_param = attributes_for(:post, subject: "update_subjectテスト", body: "update_bodyテスト")
@@ -87,10 +87,10 @@ RSpec.describe "V1::Posts", type: :request do
       expect(json["post"]["subject"]).to eq("update_subjectテスト")
       expect(json["post"]["body"]).to eq("update_bodyテスト")
     end
-    it "不正パラメータの時にerrorが返ってくる" do
+    it "不正パラメータの時にerrorsが返ってくる" do
       put v1_post_url({ id: update_param[:id] }), params: { subject: "" }
       json = JSON.parse(response.body)
-      expect(json.key?("error")).to be true
+      expect(json.key?("errors")).to be true
     end
     it "存在しないidの時に404レスポンスが返ってくる" do
       put v1_post_url({ id: update_param[:id] + 1 }), params: update_param
@@ -98,7 +98,7 @@ RSpec.describe "V1::Posts", type: :request do
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "DELETE /v1/posts#destroy" do
     let(:delete_post) do
       create(:post)
     end

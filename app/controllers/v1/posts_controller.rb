@@ -21,7 +21,7 @@ module V1
       if post.save
         render json: post
       else
-        render json: { error: post.errors }
+        render json: { errors: post.errors }
       end
     end
 
@@ -29,7 +29,7 @@ module V1
       if @post.update(post_params)
         render json: @post
       else
-        render json: { error: @post.errors }
+        render json: { errors: @post.errors }
       end
     end
 
