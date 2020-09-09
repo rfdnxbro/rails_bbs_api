@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 unless Post.exists?
-  20.times do
-    Post.create!(subject: Faker::Lorem.word, body: Faker::Lorem.paragraph)
+  users = User.all
+  users.each do |user|
+    Random.rand(0..3).times do
+      user.posts.create!(subject: Faker::Lorem.word, body: Faker::Lorem.paragraph)
+    end
   end
 end
