@@ -53,3 +53,6 @@ gem "active_model_serializers"
 # 認証
 gem "devise"
 gem "devise_token_auth"
+
+# 認可
+gem "pundit"

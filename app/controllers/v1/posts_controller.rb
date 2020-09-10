@@ -9,14 +9,17 @@ module V1
 
     def index
       posts = Post.includes(:user).order(created_at: :desc).limit(20)
+      authorize posts
       render json: posts
     end
 
     def show
+      authorize @post
       render json: @post
     end
 
     def create
+      authorize Post
       post = current_v1_user.posts.new(post_params)
       if post.save
         render json: post
@@ -26,6 +29,7 @@ module V1
     end
 
     def update
+      authorize @post
       if @post.update(post_params)
         render json: @post
       else
@@ -34,6 +38,7 @@ module V1
     end
 
     def destroy
+      authorize @post
       @post.destroy
       render json: @post
     end
