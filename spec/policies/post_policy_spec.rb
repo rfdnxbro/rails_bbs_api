@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe PostPolicy, type: :policy do
   let(:user) { create(:user) }
+  let(:admin_user) { create(:user, admin: true) }
   let(:post) { create(:post) }
 
   subject { described_class }
@@ -29,6 +30,9 @@ RSpec.describe PostPolicy, type: :policy do
     end
     it "ログインしているが別ユーザーの時に不許可" do
       expect(subject).not_to permit(user, post)
+    end
+    it "adminユーザーでログインしている時に許可" do
+      expect(subject).to permit(admin_user, post)
     end
     it "ログインしていて同一ユーザーの時に許可" do
       post.user = user

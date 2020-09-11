@@ -9,5 +9,6 @@ FactoryBot.define do
     remember_created_at { nil }
     name { "MyString" }
     tokens { nil }
+    admin { false }
   end
 end

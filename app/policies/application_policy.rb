@@ -44,6 +44,11 @@ class ApplicationPolicy
   def mine?
     @record.user == @user
   end
+
+  def admin?
+    @user.present? && @user.admin?
+  end
+
   #
   # scope
   #
