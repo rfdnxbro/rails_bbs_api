@@ -4,8 +4,8 @@
 # 認証用ヘルパ
 #
 module AuthorizationSpecHelper
-  def authorized_user_headers
-    user = create(:user)
+  def authorized_user_headers(user = nil)
+    user = create(:user) if user.nil?
     post v1_user_session_url, params: { email: user.email, password: "password" }
     headers = {}
     headers["access-token"] = response.header["access-token"]

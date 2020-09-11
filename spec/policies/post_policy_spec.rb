@@ -3,27 +3,36 @@
 require "rails_helper"
 
 RSpec.describe PostPolicy, type: :policy do
-  let(:user) { User.new }
+  let(:user) { create(:user) }
+  let(:post) { create(:post) }
 
   subject { described_class }
 
-  permissions ".scope" do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
-  permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
+  permissions :index?, :show? do
+    it "未ログインの時に許可" do
+      expect(subject).to permit(nil, post)
+    end
   end
 
   permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it "未ログインの時に不許可" do
+      expect(subject).not_to permit(nil, post)
+    end
+    it "ログインしている時に許可" do
+      expect(subject).to permit(user, post)
+    end
   end
 
-  permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
-  end
-
-  permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+  permissions :update?, :destroy? do
+    it "未ログインの時に不許可" do
+      expect(subject).not_to permit(nil, post)
+    end
+    it "ログインしているが別ユーザーの時に不許可" do
+      expect(subject).not_to permit(user, post)
+    end
+    it "ログインしていて同一ユーザーの時に許可" do
+      post.user = user
+      expect(subject).to permit(user, post)
+    end
   end
 end

@@ -39,6 +39,11 @@ class ApplicationPolicy
     false
   end
 
+  private
+
+  def mine?
+    @record.user == @user
+  end
   #
   # scope
   #

@@ -81,17 +81,20 @@ RSpec.describe "V1::Posts", type: :request do
       update_param
     end
     it "正常レスポンスコードが返ってくる" do
-      put v1_post_url({ id: update_param[:id] }), params: update_param
+      post = Post.find(update_param[:id])
+      put v1_post_url({ id: update_param[:id] }), params: update_param, headers: authorized_user_headers(post.user)
       expect(response.status).to eq 200
     end
     it "subject, bodyが正しく返ってくる" do
-      put v1_post_url({ id: update_param[:id] }), params: update_param
+      post = Post.find(update_param[:id])
+      put v1_post_url({ id: update_param[:id] }), params: update_param, headers: authorized_user_headers(post.user)
       json = JSON.parse(response.body)
       expect(json["post"]["subject"]).to eq("update_subjectテスト")
       expect(json["post"]["body"]).to eq("update_bodyテスト")
     end
     it "不正パラメータの時にerrorsが返ってくる" do
-      put v1_post_url({ id: update_param[:id] }), params: { subject: "" }
+      post = Post.find(update_param[:id])
+      put v1_post_url({ id: update_param[:id] }), params: { subject: "" }, headers: authorized_user_headers(post.user)
       json = JSON.parse(response.body)
       expect(json.key?("errors")).to be true
     end
@@ -106,13 +109,13 @@ RSpec.describe "V1::Posts", type: :request do
       create(:post)
     end
     it "正常レスポンスコードが返ってくる" do
-      delete v1_post_url({ id: delete_post.id })
+      delete v1_post_url({ id: delete_post.id }), headers: authorized_user_headers(delete_post.user)
       expect(response.status).to eq 200
     end
     it "1件減って返ってくる" do
       delete_post
       expect do
-        delete v1_post_url({ id: delete_post.id })
+        delete v1_post_url({ id: delete_post.id }), headers: authorized_user_headers(delete_post.user)
       end.to change { Post.count }.by(-1)
     end
     it "存在しないidの時に404レスポンスが返ってくる" do
