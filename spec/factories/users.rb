@@ -10,5 +10,9 @@ FactoryBot.define do
     name { "MyString" }
     tokens { nil }
     admin { false }
+
+    trait :admin do
+      admin { true }
+    end
   end
 end
